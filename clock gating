@@ -1,0 +1,5 @@
+set_clock_gating_check  -setup xxx -hold  yyy
+# Front/Back path: timing path in front/back of the LATCH
+
+set_max_time_borrow
+# allow enough time on the back-path, forcing avail slack to front-path
