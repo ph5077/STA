@@ -1,0 +1,72 @@
+dc.setup
+==========
+# Pjt Info
+set company "XYZ"
+set pjt "AAA"
+set lib_base "/home/cadLIB"
+
+# PATH
+set search_path "$lib_base/.../../db $search_path"
+set target_library "fast.db typ.db slow.db"
+set link_library "* $target_library xxx.db"
+set symbol_library "generic.sdb"
+set synthetic_library "dw.sldb"
+
+# VARs
+set hdlin_translate_off_skip_text "TRUE"
+set edifout_netlist_only "TRUE"
+set verilogout_no_tri "TRUE"
+
+# Design Read
+==========
+analyse
+elaborate
+
+# design env
+==========
+set_operating_conditions
+set_wire_load_model
+set_drive, set_driving_cell
+set_load, set_fanout_load
+set_input_delay, set_output_delay
+
+# design constraints
+==========
+# Design Rule
+set_max_transition
+set_max_fanout
+set_max_capacitance
+# optimization constraints
+create_clock
+set_clock_latency
+set_propagated_clock
+set_clock_uncertainty
+set_clock_transition
+set_max_area
+
+set_dont_touch_network {find clock clk_0}
+set_fix_hold [find clock clk_0]
+
+# Compile
+compile
+
+# report
+==========
+report_area
+report_constraints
+report_timing
+report_design
+
+==========
+# save design, ddc, vg, sdc
+# Change naming rules
+define_name_rules name_rule -allowed "A-Z a-z 0-9 _" -max_length 255 -type cell
+define_name_rules name_rule -allowed "A-Z a-z 0-9 _[]" -max_length 255 -type net
+define_name_rules name_rule -map {{"\\*cell\\*" "cell"}}
+define_name_rules name_rule -case_insensitive
+change_name -hierarchy -rules name_rule
+
+
+
+
+
