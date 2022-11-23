@@ -16,6 +16,7 @@ set synthetic_library "dw.sldb"
 set hdlin_translate_off_skip_text "TRUE"
 set edifout_netlist_only "TRUE"
 set verilogout_no_tri "TRUE"
+set_fix_multiple_port_nets -all -buffer_constants
 
 # Design Read
 ==========
@@ -40,12 +41,14 @@ set_max_capacitance
 create_clock
 set_clock_latency
 set_propagated_clock
-set_clock_uncertainty
+set_clock_uncertainty 0.1 [get_clock CLK]
 set_clock_transition
 set_max_area
 
 set_dont_touch_network {find clock clk_0}
 set_fix_hold [find clock clk_0]
+set_dont_use
+
 
 # Compile
 compile
