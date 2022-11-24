@@ -1,3 +1,14 @@
+HDL files and Library setup
+Reading files (analyze and elaborate)
+Design environment constraints
+Clock Gating
+Optimization constraints
+Compile and Compile Strategies
+Optimization techniques
+Report generation and timing analysis
+Write files
+Checklists
+
 dc.setup
 ==========
 # Pjt Info
@@ -55,10 +66,14 @@ compile
 
 # report
 ==========
+check_timing
+report_qor
+
 report_area
 report_constraints
 report_timing
 report_design
+report_clock_timing
 
 ==========
 # save design, ddc, vg, sdc
@@ -68,6 +83,25 @@ define_name_rules name_rule -allowed "A-Z a-z 0-9 _[]" -max_length 255 -type net
 define_name_rules name_rule -map {{"\\*cell\\*" "cell"}}
 define_name_rules name_rule -case_insensitive
 change_name -hierarchy -rules name_rule
+
+==========
+# Check List
+LEC
+SDC, UPF
+assign statement
+combinatorial loop
+Un-clocked regs
+Un-constrainted IO
+IO dely missing
+Un-expandable clock ????
+Master-slave separation ????
+Floating Pins
+multio drivern inputs
+un-driven inputs
+un-driven outputs
+normal cells in clock path
+pin dir mismatch
+dont use cells
 
 
 
