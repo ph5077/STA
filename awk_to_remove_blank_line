@@ -1,0 +1,11 @@
+***** Remove Comment Line *****
+egrep "//" -v FileList.f > 111
+egrep "^//" -v FileList.f > 111
+
+***** Remove Empty Line   *****
+awk NF 111
+  NF = number of fields in the line
+  
+  condition {statement} : {statement} not present, default print
+    For empty line, NF = 0, condition not met, so awk does nothing.
+    When NF > 0, awk print the whole record (line) 
