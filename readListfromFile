@@ -1,0 +1,12 @@
+******** EX 1 *********  
+  proc listFromFile {filename} {
+      set f [open $filename r]
+      set data [split [string trim [read $f]]]
+      close $f
+      return $data
+  }
+
+  set times [listFromFile time.dat]
+  set accs  [listFromFile acc.dat]
+
+****** EX 2 *****
