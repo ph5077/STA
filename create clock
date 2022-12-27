@@ -63,7 +63,21 @@ set_clock_groups -physically_exclusive -group {CLK1} -group {CLK2}
   
 report_clock -groups
   ## find out the clock groups set
+  
+report_path_group
+  ## info about the current set of path groups
+  ## group_path to set Weight and Critical Range
+      ...
+                              Critical
+      Group Name    Weight    Range
+      ----------------------------------------------------------------------
+      **default**     1.00    0.00
+      PCI_CLK         1.00    0.00
+      SDRAM_CLK       1.00    0.00
+      SD_DDR_CLK      1.00    0.00
+      SYS_CLK         1.00    0.00
 
+  
 #########  unate   #####################################################
     "unate"         : the clk signal arriving at the reg clk pin
     “positive unate": non-inv path
