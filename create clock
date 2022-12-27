@@ -18,3 +18,62 @@ remove_clock
 reset_design 
   ## removes all clocks as well as other design information.
   
+  
+### Multiple clock
+### Sync
+create_clock -period 2 -name CK1 [get_ports CKP1]
+create_generated_clock -name CK2 \
+   -source [get_ports CKP1] \
+   -divide_by 2 [get_pins U1/Q]
+
+report_interclock_relation
+  ## info about the common clock period for paths btw regs driven by different clocks
+  
+  ## To declare clocks that are not synchronous
+  use one of the following way:
+    case analysis
+    set_clock_groups -logically_exclusive
+    set_false_path
+
+### Async
+create_clock -period 2 -name CK1 [get_ports CKP1]
+create_clock -period 6 -name CK2 [get_pins OSC/OUT]
+set_clock_groups -asynchronous -group {CK1} -group {CK2}
+  ## like set_false_path
+  
+  
+### EXCLUSIVE, CK1, CK2 to a MUX
+create_clock -period 2 -name CK1 [get_ports CKP1]
+create_clock -period 8 -name CK2 [get_ports CKP2]
+set_clock_groups -logically_exclusive -group {CK1} -group {CK2}
+set_clock_groups -logically_exclusive -group {CK1 CK2} -group {CK3 CK4}
+  ## multi group possible
+set_clock_groups -logically_exclusive -group {CK1 CK2}
+  ## just one group, the group is exclusive wrt to all other clks in the design
+
+set_clock_groups -logically_exclusive -name EX1 -group {CK1 CK2} -group {CK3 CK4}
+remove_clock_groups -logically_exclusive EX1
+  ## clk group name EX1
+  ## remove a clock EX1
+  
+set_clock_groups -physically_exclusive -group {CLK1} -group {CLK2}
+  ## ignores any crosstalk btw the nets
+  ## suppressing the logical checking btw the clk
+  
+  
+report_clock -groups
+  ## find out the clock groups set
+
+#########  unate   #####################################################
+    "unate"         : the clk signal arriving at the reg clk pin
+    “positive unate": non-inv path
+    "negative unate": inverter path
+
+    "not unate": if the clock sense is ambiguous as a result of non-unate timing arcs in the clock path.
+    EX, XOR gate is not unate. could be either pos or neg unate, depending on the other input of XOR
+
+set_sense -positive -clocks [get_clocks CLK] [get_pins xor1.z]
+    specify the sense of a clk signal at a point 
+
+
+    
