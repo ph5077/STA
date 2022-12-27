@@ -1,0 +1,27 @@
+Clock Gating: 2 ways
+## RTL
+    ## 1st way
+    assign gclk = load & clk;
+    always @(posedge gclk ....) begin end
+    
+# DC
+    propagate_constraints -gate_clock
+    replace_clock_gates
+
+## 2nd way
+    always @(posedge clk ....) begin .... if (load) Q = D; end
+    
+# DC
+    current_design [get_designs xxx]
+    insert_clock_gating
+    report_clock_gating -gating_elements
+
+
+set_clock_gating_check  -setup xxx -hold  yyy
+# Front/Back path: timing path in front/back of the LATCH
+
+set_max_time_borrow
+# allow enough time on the back-path, forcing avail slack to front-path
+
+
+
