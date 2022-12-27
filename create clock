@@ -1,0 +1,20 @@
+create_clock -period 5.0 [get_ports CK1]
+  ## The source_object is where the clock exists
+  ## usually an input port but can also be a pin inside the design.
+
+report_transitive_fanout
+  ## transitive fanout of the clock source object
+  
+report_transitive_fanin
+  ## shows the successive driver and load pins in the path feeding into the sink object
+  
+set_propagated_clock [get_clocks CLK]
+  ## enable calculation of propagated delay through the network using wire parasitic data
+  ## propagate clock network delays, automatically determine latency at each reg clock pin
+
+remove_clock
+  ## remove a defined clock
+  
+reset_design 
+  ## removes all clocks as well as other design information.
+  
