@@ -1,0 +1,6 @@
+check_timing
+  ## unconstraints path
+  
+report_timing_requirements
+  ## EXCEPTION section, see if the setting correct
+  
