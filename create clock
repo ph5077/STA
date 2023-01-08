@@ -90,4 +90,85 @@ set_sense -positive -clocks [get_clocks CLK] [get_pins xor1.z]
     specify the sense of a clk signal at a point 
 
 
+=========================================================
+create_generated_clock 
+  要指定源時鐘(master clock)的 master_pin
+  CTS時，默認會去balance這兩個時鐘(即generated clock 和 master clock)，讓skew儘可能小
+  在計算generated clock的clock latency時，會把從master clock pin 到generated clock pin之間的delay也考慮在內
+  report_timing，通過選項-path_type full_clock_expanded可以將master clock的部分也展開
+  
+  report_timing -path_type full_clock
+  report_timing -path_type full_clock_expanded
+
+=========================================================  
+同一點定義多個generated clock
+=========================================================  
+CLK ------------------A
+      |___FFdiv2------B --- Y ----FFdiv3 ----------
+      |___FFdiv4------C
+=========================================================  
+      
+  同一個時鐘，與經過二分頻，四分頻後的時鐘經過MUX輸出
+  MUX輸出點定義三個時鐘CLKbypass/CLKdiv2/CLKdiv4，
+  三個時鐘是physically_exclusive
+  定義時鐘：
+  create_clock -period 10 CLK
+  create_generated_clock -name CLKbypass \
+    -source [get_ports CLK] \
+    -master CLK \
+    -divide_by 1 \
+    -combinational \
+    -add \
+    UMAX/Y
     
+  create_generated_clock -name CLKdiv2 \
+    -source FFdiv2/CK \
+    -master CLK \
+    -divide_by 2 \
+    -combinational \
+    -add \
+    UMAX/Y
+ 
+ create_generated_clock -name CLKdiv4 \
+    -source FFdiv4/CK \
+    -master CLK \
+    -divide_by 4 \
+    -combinational \
+    -add \
+    UMAX/Y
+    
+  set_clock_groups -physically_exclusive \
+    -group {CLKbypass } \
+    -group {CLKdiv2} \
+    -group {CLKdiv4}
+    
+    
+==========================================================================
+create parent clock
+  > create_clock -period 10 CLK
+
+create divide-by-2, divide-by-4 generated clocks
+  > create_generated_clock -name CLKdiv2 -divide_by 2 FFdiv2/Q -source FFdiv2/CK
+  > create_generated_clock -name CLKdiv4 -divide_by 4 FFdiv4/Q -source FFdiv4/CK
+
+create “MUXed” versions of all clocks arriving at MUX
+  > create_generated_clock -name CLK_mux -combinational UMUX/A -source UMUX/A
+  > create_generated_clock -name CLKdiv2_mux -combinational UMUX/B -source UMUX/B  
+  > create_generated_clock -name CLKdiv4_mux -combinational UMUX/C -source UMUX/C
+
+create divide-by-3 versions of all clocks arriving at FFdiv3
+  > create_generated_clock -name CLK_mux_div3
+    -divide_by 3 FFdiv3/Q -source FFdiv3/CK -master CLK_mux -add
+  > create_generated_clock -name CLKdiv2_mux_div3
+    -divide_by 3 FFdiv3/Q -source FFdiv3/CK -master CLKdiv2_mux -add
+  > create_generated_clock -name CLKdiv4_mux_div3
+    -divide_by 3 FFdiv3/Q -source FFdiv3/CK -master CLKdiv4_mux -add
+
+apply physical exclusivity to all clock families (generated clocks included)
+which are exclusive due to statically switched MUX
+  > set_clock_groups -physically_exclusive
+    -group {CLK_mux CLK_mux_div3}
+    -group {CLKdiv2_mux CLKdiv2_mux_div3}
+    -group {CLKdiv4_mux CLKdiv4_mux_div3}
+
+https://blog.csdn.net/m0_49540263/article/details/115008408
