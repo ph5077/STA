@@ -1,0 +1,29 @@
+# Define the mux
+set mux [create_mux -input_count 4 -output_count 1]
+
+# Define the clock
+set clock [create_clock -name "my_clock" -period 10]
+
+# Connect the clock to the mux
+connect_clock -mux $mux -clock $clock
+
+# Set the mux input
+set_mux_input -mux $mux -input [list input0 input1 input2 input3]
+
+=========================================================================
+# Define the mux
+set mux [create_mux -input_count 4 -output_count 1 -select_count 1]
+
+# Define the clock
+set clock [create_clock -name "my_clock" -period 10]
+
+# Connect the clock to the mux
+connect_clock -mux $mux -clock $clock
+
+# Set the mux inputs
+set_mux_input -mux $mux -input [list input0 input1 input2 input3]
+set_mux_select -mux $mux -select [list select_input]
+
+This script creates a 4-input, 1-output mux with one selection input.
+The clock is connected to the mux, the mux inputs are set to input0, input1, input2, and input3 and
+the select input is set to select_input.
