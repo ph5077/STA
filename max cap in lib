@@ -1,0 +1,14 @@
+找到庫中最大的max_capacitance值，並將該值作為保守的輸出負載。
+
+set LIB_NAME ssc_core_slow
+set MAX_CAP 0
+set OUTPUT_PINS [get_lib_pins  $LIB_NAME/*/* -filter "direction == 2"]
+
+Foreach_in_collection  pin  $OUTPUT_PINS {
+  set  NEW_CAP  [get_attribute  Spin  max_capacitance]
+　   if {$NEW_CAP > $MAX_CAP} {
+        set MAX_CAP  $NEW_CAP
+        }
+}
+
+set_load  $MAX _CAP  [all_outputs]
