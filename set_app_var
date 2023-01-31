@@ -1,0 +1,16 @@
+> dc_shell -topo
+## not recursively search, "." indicates cwd
+> set_app_var search_path [list /lib/io_lib /lib/ram_lib]  
+> set_app_var target_library [list xxx.db]
+> set ram_library [list aaaa.db bbbb.db]
+> set io_library [list cccc.db]
+## "*" means in memory components
+> set_app_var link_library [* $(target_library) $(ram_library) $(io_library)]
+> set_app_var symbol_library [list dddd.sdb]
+> set_app_var synthetic_library [list dw_xxx.sldb]
+###
+> set_app_var compile_instance_name_prefix I
+> set_app_var compile_instance_name_suffix {}
+> set_app_var hdlin_preserve_sequetial true
+### set_app_var is highly recommended for tool will alarm you when error
+### get_app_var, printvar, report_app_var: to get the variable
