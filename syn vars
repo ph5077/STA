@@ -1,0 +1,14 @@
+timing_enable_multiple_clock_per_reg ## true
+## enable multi clocks reach a reg clk pin
+
+compile_seqmap_propagate_constants  ## true
+## remove const reg, propgate the const value
+
+compile_seqmap_propagate_high_effort  ## true
+## reg cannot escape the reset state considered to be const
+
+compile_seqmap_delete_unloaded_sequential_cells  ## true
+## to del ubloaded seq cells
+
+case_analysis_with_logic_constants ## true
+## 
